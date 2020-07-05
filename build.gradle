@@ -1,0 +1,49 @@
+
+plugins {
+    id 'org.springframework.boot' version '1.5.22.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+    id 'idea'
+}
+
+group = 'com.kisrating.batch'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+// logback(slf4j)를 사용하기 때문에 모든 의존성에서 commons-logging는 제외
+// commons-logging-xxx.jar 파일을 Maven에서 내려받지 않기 때문에 runtime 시 오류가 난다.
+[configurations.runtime, configurations.default]*.exclude( module: 'commons-logging' )
+// JAVA 컴파일시 인코딩 설정
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    //implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:1.5.22.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    compile 'org.springframework.integration:spring-integration-core:4.3.22.RELEASE'
+    compileOnly 'org.projectlombok:lombok:1.18.2'
+    annotationProcessor 'org.projectlombok:lombok:1.18.2'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+    // https://mvnrepository.com/artifact/com.jcraft/jsch
+    compile group: 'com.jcraft', name: 'jsch', version: '0.1.55'
+
+    implementation 'net.jodah:failsafe:2.4.0'
+
+}
